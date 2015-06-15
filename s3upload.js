@@ -19,6 +19,8 @@ S3Upload.prototype.onError = function(status) {
 };
 
 function S3Upload(options) {
+    let option;
+
     if (options == null) {
         options = {};
     }
