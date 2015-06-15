@@ -21,6 +21,9 @@ var ReactS3Uploader = React.createClass({
             onFinish: function(signResult) {
                 console.log("Upload finished: " + signResult.publicUrl)
             },
+            onUpdateElement: function(width, height) {
+                console.log("Element sizing: ", width, "px wide, ", height, "px high");
+            },
             onError: function(message) {
                 console.log("Upload error: " + message);
             }
@@ -28,6 +31,26 @@ var ReactS3Uploader = React.createClass({
     },
 
     uploadFile: function() {
+        var self = this;
+        var file = this.getDOMNode().files[0];
+        var reader = new FileReader();
+        var image = new Image();
+        var width;
+        var height;
+
+        reader.readAsDataURL(file)
+
+        reader.onload = function(_file) {
+          image.src = _file.target.result;
+
+          image.onload = function() {
+            width = this.width
+            height = this.height
+
+            self.props.onUpdateElement({width: width, height: height});
+          }
+        }
+
         new S3Upload({
             fileElement: this.getDOMNode(),
             signingUrl: this.props.signingUrl,
